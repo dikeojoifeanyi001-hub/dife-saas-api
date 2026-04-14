@@ -1,14 +1,21 @@
-const sqlite3 = require('sqlite3').verbose();
-const path = require('path');
+const { Pool } = require('pg');
 
-const dbPath = path.join(__dirname, '../../database.sqlite');
+let pool;
 
-const db = new sqlite3.Database(dbPath, (err) => {
-  if (err) {
-    console.log('❌ Database connection failed:', err.message);
-  } else {
-    console.log('✅ SQLite database connected successfully');
-  }
-});
+if (process.env.DATABASE_URL) {
+  // Production: PostgreSQL on Railway
+  pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false }
+  });
+  console.log('✅ Using PostgreSQL (Railway)');
+} else {
+  // Development: SQLite (local)
+  const sqlite3 = require('sqlite3').verbose();
+  const path = require('path');
+  const dbPath = path.join(__dirname, '../../database.sqlite');
+  pool = new sqlite3.Database(dbPath);
+  console.log('✅ Using SQLite (Local)');
+}
 
-module.exports = db;
+module.exports = pool;
