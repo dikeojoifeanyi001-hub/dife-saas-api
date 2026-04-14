@@ -1,21 +1,23 @@
 const { Pool } = require('pg');
 
-let pool;
-
-if (process.env.DATABASE_URL) {
-  // Production: PostgreSQL on Railway
-  pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: { rejectUnauthorized: false }
-  });
-  console.log('✅ Using PostgreSQL (Railway)');
-} else {
-  // Development: SQLite (local)
-  const sqlite3 = require('sqlite3').verbose();
-  const path = require('path');
-  const dbPath = path.join(__dirname, '../../database.sqlite');
-  pool = new sqlite3.Database(dbPath);
-  console.log('✅ Using SQLite (Local)');
+// Railway provides DATABASE_URL automatically
+if (!process.env.DATABASE_URL) {
+  console.error('❌ DATABASE_URL is not set. Please add PostgreSQL database to your Railway project.');
+  process.exit(1);
 }
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }
+});
+
+pool.connect((err, client, release) => {
+  if (err) {
+    console.error('❌ Database connection failed:', err.message);
+  } else {
+    console.log('✅ PostgreSQL database connected successfully');
+    release();
+  }
+});
 
 module.exports = pool;

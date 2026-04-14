@@ -8,22 +8,16 @@
     "dev": "nodemon server.js",
     "migrate": "node migrate-pg.js"
   },
-  "keywords": [
-    "saas",
-    "logistics",
-    "api",
-    "express",
-    "postgresql"
-  ],
+  "keywords": ["saas", "logistics", "api", "express", "postgresql"],
   "author": "dikeojoifeanyi001-hub",
   "license": "MIT",
   "dependencies": {
-    "bcrypt": "^5.1.1",
-    "cors": "^2.8.5",
-    "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.2",
-    "pg": "^8.20.0"
+    "bcrypt": "^5.1.1",
+    "dotenv": "^16.3.1",
+    "cors": "^2.8.5",
+    "pg": "^8.11.3"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
