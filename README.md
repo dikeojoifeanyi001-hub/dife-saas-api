@@ -1,154 +1,247 @@
 # 🚀 DIFE Mini SaaS API
 
-## 📌 Overview
-
-DIFE Mini SaaS API is a backend system that simulates a **logistics intelligence platform**. It enables companies to manage drivers, assign routes, and analyze basic environmental risk associated with transportation.
-
-This project is designed as a **multi-tenant SaaS system**, where multiple companies can independently manage their logistics operations.
+A production-ready backend SaaS API demonstrating **multi-tenant architecture**, **authentication**, and **logistics risk analysis**.
 
 ---
 
-## 🎯 Purpose
+## 🌐 Live API
 
-The goal of this project is to demonstrate real-world backend engineering skills, including:
+**Base URL:**
+https://dife-saas-api-production.up.railway.app
 
-* RESTful API design
-* Authentication & authorization
-* Multi-tenant architecture
-* Clean code structure (controllers, services, routes)
-* Scalable backend system design
+👉 [API URL on Railway - Live](https://dife-saas-api-production.up.railway.app)
 
 ---
 
 ## ⚙️ Tech Stack
 
-* **Node.js**
-* **Express.js**
-* **PostgreSQL**
-* **JWT Authentication**
-* **Render (Deployment)**
-* **GitHub (Version Control)**
+* Node.js
+* Express.js
+* PostgreSQL
+* JWT Authentication
+* Railway (Deployment)
 
 ---
 
-## 🏗️ System Architecture
+## 📚 Features
 
-User → Company → Drivers → Routes
-
-Each user belongs to a company, and each company manages its own drivers and routes.
+* 🔐 JWT Authentication (Login & Register)
+* 🏢 Multi-tenant SaaS (Company-based data isolation)
+* 🚚 Driver Management (CRUD operations)
+* 🛣️ Route Management (Create & track routes)
+* ⚠️ Risk Scoring System (0–100 scale)
+* 🗄️ PostgreSQL Database (production-ready)
 
 ---
 
-## 🔑 Core Features
+## 🏗️ Architecture
+
+```
+Client (React Dashboard)
+        │
+        ▼
+DIFE SaaS API (Express.js)
+ ├── Controllers (handle requests)
+ ├── Services (business logic)
+ └── Routes (API endpoints)
+        │
+        ▼
+PostgreSQL Database
+```
+
+---
+
+## 🧠 Risk Scoring Logic
+
+Each route is assigned a **risk score (0–100)** based on simulated environmental factors.
+
+| Level  | Score Range | Meaning                      |
+| ------ | ----------- | ---------------------------- |
+| Low    | 0 – 40      | Normal operations            |
+| Medium | 41 – 70     | Monitor closely              |
+| High   | 71 – 100    | Immediate attention required |
+
+**Formula:**
+
+```
+risk_score = min((origin_length + destination_length) × 2.5, 100)
+```
+
+---
+
+## 📡 API Endpoints
 
 ### 🔐 Authentication
 
-* User registration
-* User login
-* JWT-based authentication
+* POST `/api/auth/register`
+* POST `/api/auth/login`
 
-### 🏢 Multi-Tenant System
+### 🏢 Companies
 
-* Companies can manage their own data independently
+* GET `/api/companies/me`
+* GET `/api/companies/stats`
+* PUT `/api/companies/me`
 
-### 🚚 Driver Management
+### 🚚 Drivers
 
-* Create drivers
-* View drivers per company
+* POST `/api/drivers`
+* GET `/api/drivers`
+* GET `/api/drivers/:id`
+* PUT `/api/drivers/:id`
+* DELETE `/api/drivers/:id`
 
-### 🛣️ Route Management
+### 🛣️ Routes
 
-* Create routes
-* Assign drivers to routes
-* Track origin and destination
+* POST `/api/routes`
+* GET `/api/routes`
+* GET `/api/routes/:id`
+* PUT `/api/routes/:id`
+* DELETE `/api/routes/:id`
 
-### ⚠️ Risk Calculation
+### ⚠️ Risk
 
-* Each route has a calculated risk score
-* Risk is based on simulated environmental data (mock logic)
-
----
-
-## 🔌 API Endpoints
-
-### Auth
-
-* POST /api/auth/register
-* POST /api/auth/login
-
-### Drivers
-
-* GET /api/drivers
-* POST /api/drivers
-
-### Routes
-
-* GET /api/routes
-* POST /api/routes
-
-### Risk
-
-* GET /api/risk/:routeId
+* GET `/api/risk`
+* GET `/api/risk/:routeId`
 
 ---
 
-## 📊 Example Use Case
+## 🧪 API Examples
 
-A logistics company can:
+### 🔹 Register User
 
-* Register and log in
-* Add drivers
-* Create delivery routes
-* View risk scores for each route to make safer decisions
+```bash
+curl -X POST https://dife-saas-api-production.up.railway.app/api/auth/register \
+-H "Content-Type: application/json" \
+-d '{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "password": "123456",
+  "companyName": "Logistics Co"
+}'
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "user": {
+      "id": 1,
+      "name": "John Doe",
+      "email": "john@example.com"
+    },
+    "token": "jwt_token"
+  }
+}
+```
 
 ---
 
-## 🌍 Deployment
+### 🔹 Create Driver
 
-The API is deployed on **Render**:
+```bash
+curl -X POST https://dife-saas-api-production.up.railway.app/api/drivers \
+-H "Authorization: Bearer YOUR_TOKEN" \
+-H "Content-Type: application/json" \
+-d '{"name": "Driver One"}'
+```
 
-👉 Live URL: *(Add your Render link here)*
+---
+
+### 🔹 Get Routes
+
+```bash
+curl -X GET https://dife-saas-api-production.up.railway.app/api/routes \
+-H "Authorization: Bearer YOUR_TOKEN"
+```
+
+---
+
+## ❌ Error Handling
+
+The API returns standard HTTP status codes:
+
+| Code | Meaning      |
+| ---- | ------------ |
+| 200  | Success      |
+| 201  | Created      |
+| 400  | Bad Request  |
+| 401  | Unauthorized |
+| 404  | Not Found    |
+| 500  | Server Error |
+
+Example:
+
+```json
+{
+  "error": "Invalid token"
+}
+```
+
+---
+
+## 💻 Run Locally
+
+### Prerequisites
+
+* Node.js (v18+)
+* PostgreSQL (optional — SQLite supported)
+
+### Setup
+
+```bash
+git clone https://github.com/dikeojoifeanyi001-hub/dife-saas-api.git
+cd dife-saas-api
+npm install
+```
+
+Create `.env` file:
+
+```
+PORT=5000
+JWT_SECRET=your_secret_key
+DATABASE_URL=your_database_url
+```
+
+Run the app:
+
+```bash
+npm run dev
+```
 
 ---
 
 ## 📁 Project Structure
 
+```
 src/
-├── controllers/
-├── services/
-├── routes/
-├── middleware/
-├── config/
-└── utils/
+├── config/        # Database setup
+├── controllers/   # Request handlers
+├── services/      # Business logic
+├── routes/        # API routes
+├── middleware/    # Auth middleware
+└── utils/         # Helper functions
+```
 
 ---
 
-## 🧠 What I Learned
+## 🔜 Upcoming Projects
 
-* Designing scalable backend systems
-* Implementing authentication using JWT
-* Structuring projects using service-based architecture
-* Building multi-tenant SaaS logic
-
----
-
-## 🚀 Future Improvements
-
-* Integration with real weather APIs
-* Air quality data integration
-* Advanced route optimization
-* Email notifications & automation system
-* Frontend dashboard integration
-
----
-
-## 🤝 Related Projects
-
-* DIFE React Dashboard (Frontend)
-* DIFE Automation System (Background jobs & scheduling)
+* React Dashboard (Frontend UI)
+* Automation System (Background jobs & scheduling)
 
 ---
 
 ## 👨‍💻 Author
 
-D.O.I Henry
+**D.O.I Henry**
+Backend / Full Stack Developer
+
+* GitHub: https://github.com/dikeojoifeanyi001-hub
+
+---
+
+## 📄 License
+
+MIT License — free for learning and portfolio use.
