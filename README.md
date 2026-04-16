@@ -1,88 +1,71 @@
-# 🚀 DIFE Mini SaaS API
+# DIFE SaaS API
 
-A production-ready backend SaaS API demonstrating **multi-tenant architecture**, **authentication**, and **logistics risk analysis**.
+Production-grade multi-tenant backend system for logistics intelligence. Designed with real-world SaaS architecture, authentication, and risk analysis workflows.
 
 ---
 
-## 🌐 Live API
+## 🚀 Live API
 
 **Base URL:**
 https://dife-saas-api-production.up.railway.app
 
-👉 [API URL on Railway - Live](https://dife-saas-api-production.up.railway.app)
+Test in browser or with Postman/cURL.
 
 ---
 
-## ⚙️ Tech Stack
+## 📌 Overview
 
-* Node.js
-* Express.js
-* PostgreSQL
-* JWT Authentication
-* Railway (Deployment)
+DIFE SaaS API simulates a real logistics platform where companies manage drivers, assign routes, and monitor environmental risk.
+
+The system is built as a **multi-tenant SaaS**, ensuring each company operates with isolated data and secure access.
 
 ---
 
-## 📚 Features
+## ⚡ Core Features
 
-* 🔐 JWT Authentication (Login & Register)
-* 🏢 Multi-tenant SaaS (Company-based data isolation)
-* 🚚 Driver Management (CRUD operations)
-* 🛣️ Route Management (Create & track routes)
-* ⚠️ Risk Scoring System (0–100 scale)
-* 🗄️ PostgreSQL Database (production-ready)
-
----
-
-## 🏗️ Architecture
-
-```
-Client (React Dashboard)
-        │
-        ▼
-DIFE SaaS API (Express.js)
- ├── Controllers (handle requests)
- ├── Services (business logic)
- └── Routes (API endpoints)
-        │
-        ▼
-PostgreSQL Database
-```
+* Multi-tenant architecture (company-level data isolation)
+* JWT-based authentication (stateless)
+* Role-based access control
+* Driver and route management (CRUD)
+* Risk scoring engine (0–100)
+* PostgreSQL production database
+* Deployed on Railway
 
 ---
 
-## 🧠 Risk Scoring Logic
+## 🛠 Tech Stack
 
-Each route is assigned a **risk score (0–100)** based on simulated environmental factors.
+* **Backend:** Node.js, Express
+* **Database:** PostgreSQL
+* **Authentication:** JWT, bcrypt
+* **Deployment:** Railway
 
-| Level  | Score Range | Meaning                      |
-| ------ | ----------- | ---------------------------- |
-| Low    | 0 – 40      | Normal operations            |
-| Medium | 41 – 70     | Monitor closely              |
-| High   | 71 – 100    | Immediate attention required |
+---
 
-**Formula:**
+## 🧠 Architecture
 
-```
-risk_score = min((origin_length + destination_length) × 2.5, 100)
-```
+Client (Dashboard) → API (Controllers → Services) → Database (PostgreSQL)
+
+* Controllers handle HTTP requests
+* Services contain business logic
+* Database stores company, driver, and route data
 
 ---
 
 ## 📡 API Endpoints
 
-### 🔐 Authentication
+### Authentication
 
 * POST `/api/auth/register`
 * POST `/api/auth/login`
 
-### 🏢 Companies
+### Companies
 
 * GET `/api/companies/me`
 * GET `/api/companies/stats`
 * PUT `/api/companies/me`
 
-### 🚚 Drivers
+### Drivers
 
 * POST `/api/drivers`
 * GET `/api/drivers`
@@ -90,7 +73,7 @@ risk_score = min((origin_length + destination_length) × 2.5, 100)
 * PUT `/api/drivers/:id`
 * DELETE `/api/drivers/:id`
 
-### 🛣️ Routes
+### Routes
 
 * POST `/api/routes`
 * GET `/api/routes`
@@ -98,150 +81,114 @@ risk_score = min((origin_length + destination_length) × 2.5, 100)
 * PUT `/api/routes/:id`
 * DELETE `/api/routes/:id`
 
-### ⚠️ Risk
+### Risk
 
 * GET `/api/risk`
 * GET `/api/risk/:routeId`
 
 ---
 
-## 🧪 API Examples
+## 🧪 Example Usage
 
-### 🔹 Register User
-
-```bash
-curl -X POST https://dife-saas-api-production.up.railway.app/api/auth/register \
--H "Content-Type: application/json" \
--d '{
-  "name": "John Doe",
-  "email": "john@example.com",
-  "password": "123456",
-  "companyName": "Logistics Co"
-}'
-```
-
-**Response:**
-
-```json
-{
-  "success": true,
-  "data": {
-    "user": {
-      "id": 1,
-      "name": "John Doe",
-      "email": "john@example.com"
-    },
-    "token": "jwt_token"
-  }
-}
-```
-
----
-
-### 🔹 Create Driver
+### Register
 
 ```bash
-curl -X POST https://dife-saas-api-production.up.railway.app/api/drivers \
--H "Authorization: Bearer YOUR_TOKEN" \
--H "Content-Type: application/json" \
--d '{"name": "Driver One"}'
+curl -X POST https://dife-saas-api-production.up.railway.app/api/auth/register 
+-H "Content-Type: application/json" 
+-d '{"name":"John","email":"[john@example.com](mailto:john@example.com)","password":"123456","companyName":"Logistics Co"}'
 ```
 
----
-
-### 🔹 Get Routes
+### Login
 
 ```bash
-curl -X GET https://dife-saas-api-production.up.railway.app/api/routes \
--H "Authorization: Bearer YOUR_TOKEN"
+curl -X POST https://dife-saas-api-production.up.railway.app/api/auth/login 
+-H "Content-Type: application/json" 
+-d '{"email":"[john@example.com](mailto:john@example.com)","password":"123456"}'
+```
+
+### Create Driver
+
+```bash
+curl -X POST https://dife-saas-api-production.up.railway.app/api/drivers 
+-H "Authorization: Bearer TOKEN" 
+-H "Content-Type: application/json" 
+-d '{"name":"Driver One"}'
 ```
 
 ---
 
-## ❌ Error Handling
+## 🧠 Risk Scoring Logic
 
-The API returns standard HTTP status codes:
-
-| Code | Meaning      |
-| ---- | ------------ |
-| 200  | Success      |
-| 201  | Created      |
-| 400  | Bad Request  |
-| 401  | Unauthorized |
-| 404  | Not Found    |
-| 500  | Server Error |
-
-Example:
-
-```json
-{
-  "error": "Invalid token"
-}
+```js
+risk_score = Math.min((origin.length + destination.length) * 2.5, 100)
 ```
+
+| Level  | Score  | Meaning          |
+| ------ | ------ | ---------------- |
+| Low    | 0–40   | Normal           |
+| Medium | 41–70  | Monitor          |
+| High   | 71–100 | Immediate action |
 
 ---
 
-## 💻 Run Locally
-
-### Prerequisites
-
-* Node.js (v18+)
-* PostgreSQL (optional — SQLite supported)
-
-### Setup
+## ⚙️ Local Development
 
 ```bash
 git clone https://github.com/dikeojoifeanyi001-hub/dife-saas-api.git
 cd dife-saas-api
 npm install
-```
-
-Create `.env` file:
-
-```
-PORT=5000
-JWT_SECRET=your_secret_key
-DATABASE_URL=your_database_url
-```
-
-Run the app:
-
-```bash
+cp .env.example .env
+node setup-db.js
 npm run dev
 ```
 
 ---
 
-## 📁 Project Structure
+## 🔐 Environment Variables
 
-```
-src/
-├── config/        # Database setup
-├── controllers/   # Request handlers
-├── services/      # Business logic
-├── routes/        # API routes
-├── middleware/    # Auth middleware
-└── utils/         # Helper functions
+```env
+PORT=5000
+JWT_SECRET=your_secret
+DATABASE_URL=postgresql://user:password@localhost:5432/db
 ```
 
 ---
 
-## 🔜 Upcoming Projects
+## 📁 Structure
 
-* React Dashboard (Frontend UI)
-* Automation System (Background jobs & scheduling)
+```
+src/
+controllers/
+services/
+routes/
+middleware/
+config/
+utils/
+```
+
+---
+
+## 🚀 Deployment
+
+Deployed on Railway with auto-deploy from GitHub.
+
+---
+
+## 🔗 Related Projects
+
+* Dashboard: https://dife-dashboard.pages.dev
+* Automation: https://dife-automation.dikeojo-ifeanyi001.workers.dev/run-jobs
 
 ---
 
 ## 👨‍💻 Author
 
-**D.O.I Henry**
-Backend / Full Stack Developer
-
-* GitHub: https://github.com/dikeojoifeanyi001-hub
+D.O.I Henry
+GitHub: https://github.com/dikeojoifeanyi001-hub
+Portfolio: https://doi-henry-portfolio.pages.dev
 
 ---
 
 ## 📄 License
 
-MIT License — free for learning and portfolio use.
+MIT
