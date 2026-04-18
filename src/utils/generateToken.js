@@ -1,17 +1,11 @@
 const jwt = require('jsonwebtoken');
 
 const generateToken = (userId, companyId, role) => {
-  const payload = {
-    id: userId,
-    companyId: companyId,
-    role: role
-  };
-  
-  const secret = process.env.JWT_SECRET || 'dife_super_secret_key_change_this_in_production';
-  
-  const token = jwt.sign(payload, secret, { expiresIn: '7d' });
-  
-  return token;
+  return jwt.sign(
+    { id: userId, companyId, role },
+    process.env.JWT_SECRET
+    // No expiresIn = token never expires
+  );
 };
 
 module.exports = generateToken;
